@@ -52,6 +52,37 @@ def shell_sort(collection:list[int])->list[int]:
         step = step // 2
     return collection
 
+# 合并排序
+def merge_sort_from_top(collection:list[int])->list[int]:
+    def sort_range(collection, begin, end):
+        if end-begin
+        mid = (begin+end)/2
+        sort_range(collection, begin, mid)
+        sort_range(collection, mid, end)
+        merge(collection, begin, mid, end)
+        
+    def merge(collection, begin, mid, end):
+        tmp = []*(end-begin)
+        i = begin
+        j = mid
+        idx = 0
+        while i < mid and j < end:
+            if collection[i]<=collection[j]:
+                i = i + 1
+                tmp[idx] = collection[i]
+            else:
+                j = j+1
+                tmp[j] = collection[j]
+            idx = idx+1
+        if i < mid:
+            tmp[idx:] = collection[i:mid-i]
+        else:
+            tmp[idx:] = collection[j:end-j]
+    
+
+def merge_sort_from_bottom(collection:list[int])->list[int]:
+    pass
+
 if __name__ == "__main__":
     cases = [
         ([],[]),
