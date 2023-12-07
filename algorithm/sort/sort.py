@@ -53,35 +53,19 @@ def shell_sort(collection:list[int])->list[int]:
     return collection
 
 # 合并排序
-def merge_sort_from_top(collection:list[int])->list[int]:
-    def sort_range(collection, begin, end):
-        if end-begin
-        mid = (begin+end)/2
-        sort_range(collection, begin, mid)
-        sort_range(collection, mid, end)
-        merge(collection, begin, mid, end)
-        
-    def merge(collection, begin, mid, end):
-        tmp = []*(end-begin)
-        i = begin
-        j = mid
-        idx = 0
-        while i < mid and j < end:
-            if collection[i]<=collection[j]:
-                i = i + 1
-                tmp[idx] = collection[i]
-            else:
-                j = j+1
-                tmp[j] = collection[j]
-            idx = idx+1
-        if i < mid:
-            tmp[idx:] = collection[i:mid-i]
-        else:
-            tmp[idx:] = collection[j:end-j]
+def merge_sort(collection:list[int])->list[int]:
+    def merge(left:list, right:list)->list:
+        result = []
+        while left and right:
+            result.append(left.pop(0) if left[0]<=right[0] else right.pop(0))
+        result.extend(left)
+        result.extend(right)
+        return result
+    if len(collection) <=1:
+        return collection
+    mid = len(collection) // 2
+    return merge(merge_sort(collection[:mid]), merge_sort(collection[mid:]))
     
-
-def merge_sort_from_bottom(collection:list[int])->list[int]:
-    pass
 
 if __name__ == "__main__":
     cases = [
@@ -94,7 +78,8 @@ if __name__ == "__main__":
     for input,expect_res in cases:
         #shell_sort(input)
         #bubble_sort(input)
-        insert_sort(input)
+        #insert_sort(input)
         #select_sort(input)
+        input = merge_sort(input)
         print(input, expect_res)
         assert input == expect_res
