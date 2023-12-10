@@ -39,7 +39,8 @@ func TestSort(t *testing.T) {
 		},
 	}
 	for _, c := range testCases {
-		quick_sort(c.input)
+		//quick_sort(c.input)
+		heap_sort(c.input)
 		assert.EqualValues(t, c.input, c.result)
 
 	}

@@ -51,3 +51,43 @@ func sort_range(d []int, low int, high int) {
 func quick_sort(datas []int) {
 	sort_range(datas, 0, len(datas)-1)
 }
+
+// 堆排序
+func push_heap(datas []int, val int, heapSize int) {
+	//一直和父节点对比
+	if heapSize <= 0 {
+		return
+	}
+	idx := heapSize
+	for idx > 0 && datas[idx] > datas[(idx-1)/2] {
+		datas[idx], datas[(idx-1)/2] = datas[(idx-1)/2], datas[idx]
+		idx = (idx - 1) / 2
+	}
+}
+func pop_heap(datas []int, val int, heapSize int) {
+	datas[0], datas[heapSize-1] = datas[heapSize-1], datas[0]
+	heapSize--
+	idx := 0
+	for heapSize > 1 && idx <= (heapSize-2)/2 {
+		larggerIdx := idx*2 + 1
+		if idx*2+2 < heapSize && datas[idx*2+2] > datas[idx*2+1] {
+			larggerIdx = idx*2 + 2
+		}
+		if datas[larggerIdx] <= datas[idx] {
+			break
+		}
+		datas[larggerIdx], datas[idx] = datas[idx], datas[larggerIdx]
+		idx = larggerIdx
+	}
+}
+func heap_sort(datas []int) {
+	//if len(datas)
+	//push heap
+	for idx, v := range datas {
+		push_heap(datas, v, idx)
+	}
+	//pop
+	for idx, v := range datas {
+		pop_heap(datas, v, len(datas)-idx)
+	}
+}
