@@ -67,23 +67,28 @@ func push_heap(datas []int, heapSize int) {
 }
 
 // 把数组初始化为堆，自底向上
+
+// 调整以下表j为堆顶的堆
+func heapify(datas []int, j int, heapSize int) {
+	for 2*j+1 < heapSize {
+		larggerIdx := 2*j + 1
+		if 2*j+2 < heapSize && datas[2*j+2] > datas[2*j+1] {
+			larggerIdx = 2*j + 2
+		}
+		if datas[larggerIdx] <= datas[j] {
+			break
+		}
+		datas[j], datas[larggerIdx] = datas[larggerIdx], datas[j]
+		j = larggerIdx
+	}
+}
 func init_heap(datas []int) {
 	if len(datas) <= 1 {
 		return
 	}
 	//只调整非叶子节点
 	for i := len(datas)/2 - 1; i >= 0; i-- {
-		for j := i; 2*j+1 < len(datas); {
-			larggerIdx := 2*j + 1
-			if 2*j+2 < len(datas) && datas[2*j+2] > datas[2*j+1] {
-				larggerIdx = 2*j + 2
-			}
-			if datas[larggerIdx] <= datas[j] {
-				break
-			}
-			datas[j], datas[larggerIdx] = datas[larggerIdx], datas[j]
-			j = larggerIdx
-		}
+		heapify(datas, i, len(datas))
 	}
 }
 
@@ -92,17 +97,7 @@ func pop_heap(datas []int, heapSize int) {
 	datas[0], datas[heapSize-1] = datas[heapSize-1], datas[0]
 	heapSize--
 	idx := 0
-	for heapSize > 1 && idx <= (heapSize-2)/2 {
-		larggerIdx := idx*2 + 1
-		if idx*2+2 < heapSize && datas[idx*2+2] > datas[idx*2+1] {
-			larggerIdx = idx*2 + 2
-		}
-		if datas[larggerIdx] <= datas[idx] {
-			break
-		}
-		datas[larggerIdx], datas[idx] = datas[idx], datas[larggerIdx]
-		idx = larggerIdx
-	}
+	heapify(datas, idx, heapSize)
 }
 func heap_sort(datas []int) {
 	//if len(datas)
