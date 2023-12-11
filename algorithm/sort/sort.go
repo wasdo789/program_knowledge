@@ -53,7 +53,8 @@ func quick_sort(datas []int) {
 }
 
 // 堆排序
-func push_heap(datas []int, val int, heapSize int) {
+// 逐步建立堆，自底向上
+func push_heap(datas []int, heapSize int) {
 	//一直和父节点对比
 	if heapSize <= 0 {
 		return
@@ -64,7 +65,30 @@ func push_heap(datas []int, val int, heapSize int) {
 		idx = (idx - 1) / 2
 	}
 }
-func pop_heap(datas []int, val int, heapSize int) {
+
+// 把数组初始化为堆，自底向上
+func init_heap(datas []int) {
+	if len(datas) <= 1 {
+		return
+	}
+	//只调整非叶子节点
+	for i := len(datas)/2 - 1; i >= 0; i-- {
+		for j := i; 2*j+1 < len(datas); {
+			larggerIdx := 2*j + 1
+			if 2*j+2 < len(datas) && datas[2*j+2] > datas[2*j+1] {
+				larggerIdx = 2*j + 2
+			}
+			if datas[larggerIdx] <= datas[j] {
+				break
+			}
+			datas[j], datas[larggerIdx] = datas[larggerIdx], datas[j]
+			j = larggerIdx
+		}
+	}
+}
+
+// 删除堆顶数据后，重新调整，自顶向下
+func pop_heap(datas []int, heapSize int) {
 	datas[0], datas[heapSize-1] = datas[heapSize-1], datas[0]
 	heapSize--
 	idx := 0
@@ -82,12 +106,13 @@ func pop_heap(datas []int, val int, heapSize int) {
 }
 func heap_sort(datas []int) {
 	//if len(datas)
-	//push heap
-	for idx, v := range datas {
-		push_heap(datas, v, idx)
-	}
+	// //push heap
+	// for idx, _ := range datas {
+	// 	push_heap(datas, idx)
+	// }
+	init_heap(datas)
 	//pop
-	for idx, v := range datas {
-		pop_heap(datas, v, len(datas)-idx)
+	for idx, _ := range datas {
+		pop_heap(datas, len(datas)-idx)
 	}
 }
