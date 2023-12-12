@@ -48,6 +48,24 @@ func (r *Trie) Insert(s string) {
 	return
 }
 
+func (r *Trie) Delete(s string) {
+	if r.Search(s) != 0 {
+		curNode := r.Root
+		curNode.Pass--
+		for _, x := range s {
+			//fmt.Printf("%c\n", x)
+			curNode.Child[x].Pass--
+			if curNode.Child[x].Pass == 0 {
+				delete(curNode.Child, x)
+				break
+			}
+			curNode = curNode.Child[x]
+		}
+		curNode.End--
+	}
+
+}
+
 func (r Trie) Search(s string) int {
 	curNode := r.Root
 	for _, c := range s {

@@ -15,4 +15,7 @@ func TestTrie(t *testing.T) {
 	fmt.Printf("ab search %d\n", r.Search("ab"))
 	fmt.Printf("ab include %d\n", r.PrefixSearch("ab"))
 	fmt.Printf("你好 include %d\n", r.PrefixSearch("你好"))
+	r.Delete("ab")
+	fmt.Printf("ab search %d\n", r.Search("ab"))
+	fmt.Printf("ab include %d\n", r.PrefixSearch("ab"))
 }
