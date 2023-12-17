@@ -4,7 +4,9 @@ package leetcode
 	链表相关算法题
 */
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // 单链表结构
 type Node struct {
@@ -33,7 +35,18 @@ func InitList(vals []int) *Node {
 
 func (n Node) Print() {
 	for cur := &n; cur != nil; cur = cur.Next {
-		fmt.Printf("%+v->", cur)
+		fmt.Printf("addr:%p, %+v->", cur, cur)
+	}
+	fmt.Println()
+}
+
+func PrintNode(n *Node) {
+	if n == nil {
+		fmt.Print("nil")
+	} else {
+		for cur := n; cur != nil; cur = cur.Next {
+			fmt.Printf("addr:%p, %+v->", cur, cur)
+		}
 	}
 	fmt.Println()
 }
@@ -231,4 +244,138 @@ func Partition3List(r *Node, val int) *Node {
 		}
 	}
 
+}
+
+type RandNode struct {
+	Val  int
+	Next *RandNode
+	Rand *RandNode
+}
+
+func (n RandNode) Print() {
+	for cur := &n; cur != nil; cur = cur.Next {
+		if cur.Rand != nil {
+			fmt.Printf("val:%v, rand:%v", cur.Val, cur.Rand.Val)
+		} else {
+			fmt.Printf("val:%v, rand:%v", cur.Val, cur.Rand)
+		}
+
+	}
+	fmt.Println()
+}
+
+// 复制特殊链表，该链表有个额外的随机指针
+// 简单方法1，使用has结构存储旧节点到新节点的映射，不实现
+// 复杂方法2，依次在原链表每个节点后面新增一个复制节点，最后把
+// 复制节点连接起来即可。复制节点的随机指针指向原节点的随机指针的下一个
+func CopyRandList(r *RandNode) *RandNode {
+	if r == nil {
+		return nil
+	} else if r.Next == nil {
+		return &RandNode{
+			Val: r.Val,
+		}
+	}
+
+	//复制节点
+	var h, cur *RandNode
+	for cur = r; cur != nil; {
+		next := cur.Next
+		cpNode := &RandNode{
+			Val: cur.Val,
+		}
+		if h == nil {
+			h = cpNode
+		}
+		cur.Next = cpNode
+		cpNode.Next = next
+		cur = next
+	}
+	//复制随机指针,cur依次往后移动，指向链表的旧节点
+	for cur = r; cur != nil; {
+		next := cur.Next.Next
+		if cur.Rand != nil {
+			cur.Next.Rand = cur.Rand.Next
+		}
+		cur = next
+
+	}
+	//恢复链表
+	cur = r
+	var preNewNode *RandNode
+	for cur != nil {
+		nextOldNode := cur.Next.Next //先保存下个旧链表节点位置
+		if preNewNode != nil {
+			preNewNode.Next = cur.Next
+		}
+		preNewNode = cur.Next
+		cur.Next = nextOldNode
+		cur = nextOldNode
+	}
+	return h
+
+}
+
+// 检测链表是否有环，并且返回环的入口
+// 简单方法，使用辅助hash结构存储地址，如果遇到相同的，说明有环
+// 使用快慢指针，如果有环，快指针会追上慢指针，然后把快指针指向链表头，
+// 快慢指针每次走一步，直至相遇，就是环的入口
+func CheckListCycle(r *Node) *Node {
+	if r == nil || r.Next == nil {
+		return nil
+	}
+	slow := r.Next
+	fast := r.Next.Next
+	//如果快指针变为nil，说明无环
+	for slow != fast {
+		slow = slow.Next
+		if fast == nil || fast.Next == nil {
+			return nil
+		}
+		fast = fast.Next.Next
+	}
+	fast = r
+	for fast = r; fast != slow; {
+		slow = slow.Next
+		fast = fast.Next
+	}
+	return fast
+}
+
+/*
+检测两个无环链表是否相交，并返回首个相交节点
+如果相交，两个链表末尾节点一定相等
+假设两个链表长度相差a，长指针先走n，然后短链表指针同时移动，节点相等时就是首个相交节点
+*/
+func CheckListMergeNode(l *Node, r *Node) *Node {
+	if l == nil || r == nil {
+		return nil
+	}
+	lCur, rCur := l, r
+	var lSize, rSize int
+	for ; lCur.Next != nil; lCur = lCur.Next {
+		lSize++
+	}
+	for ; rCur.Next != nil; rCur = rCur.Next {
+		rSize++
+	}
+	if lCur != rCur {
+		return nil
+	}
+	lCur, rCur = l, r
+	if rSize > lSize {
+		for i := 0; i < rSize-lSize; i++ {
+			rCur = rCur.Next
+		}
+	} else {
+		for i := 0; i < lSize-rSize; i++ {
+			lCur = lCur.Next
+		}
+	}
+	for lCur != rCur {
+		lCur = lCur.Next
+		rCur = rCur.Next
+	}
+
+	return lCur
 }
