@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"unsafe"
 )
@@ -92,5 +93,106 @@ func main() {
 	fmt.Printf("s2: %#v, s2 == nil, %v\n", (*reflect.SliceHeader)(unsafe.Pointer(&s2)), s2 == nil)
 	var s3 []int
 	fmt.Printf("s3: %#v, s3 == nil, %v\n", (*reflect.SliceHeader)(unsafe.Pointer(&s3)), s3 == nil)
+
+	//指针的示例
+	fmt.Println("----------pointer test -----------------")
+	un1 := uint(math.MaxUint64)
+	n2 := int(3)
+	//普通指针，可以用于取值操作
+	fmt.Println(reflect.TypeOf(un1))
+	fmt.Println(reflect.TypeOf(n2))
+	fmt.Println(*(&un1))
+
+	fmt.Println(reflect.TypeOf(&un1))
+	fmt.Println(reflect.TypeOf(&n2))
+
+	//pointer用于指针强制转换，不可用*取值操作
+	//p1 := (*int)(&un1) //编译错误：cannot convert &un1 (value of type *uint) to *int
+	p1 := (*int)(unsafe.Pointer(&un1))
+	fmt.Println(reflect.TypeOf(p1))
+	fmt.Println(*p1)
+	pt := unsafe.Pointer(&un1)
+	fmt.Println(reflect.TypeOf(pt))
+	//fmt.Println(*pt) //出错，invalid operation: cannot indirect pt (variable of type unsafe.Pointer)
+
+	//unptr 1.用于和Pointer互相转换。 2、用于指针运算，比如偏移
+	arr := new([3]int)
+	p1 = (*int)(unsafe.Pointer(arr))
+	//up1 := uintptr(arr) //不能直接把普通指针转为uintptr， cannot convert arr (variable of type *[3]int) to uintptr
+	*p1 = 2 //第一个元素改为2
+	p2 := (*int)(unsafe.Pointer(uintptr(unsafe.Pointer(arr)) + uintptr(unsafe.Sizeof(int(0)))))
+	*p2 = 3 //第二个元素改为3
+	fmt.Println(*arr)
+
+	fmt.Println("----------struct memory align test -----------------")
+	//测试内置类型对齐大小，返回值是min（机器位数/8，类型字节大小)
+	fmt.Println(unsafe.Alignof(byte(1)))       // 1 -- min(8,1)
+	fmt.Println(unsafe.Alignof(int16(1)))      // 1 -- min(8,1)
+	fmt.Println(unsafe.Alignof(int32(1)))      // 4 -- min (8,4)
+	fmt.Println(unsafe.Alignof(int64(1)))      // 8 -- min (8,8)
+	fmt.Println(unsafe.Alignof(complex128(1))) // 8 -- min(8,16)
+	//数组、slice、map内存对齐大小和元素数量无关， 和底层结构有关,实际上和struct规则一致
+	fmt.Println("unsafe.Alignof([]byte{1, 2}) ", unsafe.Alignof([]byte{1, 2}))
+
+	type Sw struct {
+		b byte
+		i int32
+		j int64
+	}
+	w := new(Sw)
+	//结构体的内存对齐大小为其各个字段内存对齐大小的最大值
+	fmt.Printf("sizeof(w) %v, alignof(Sw) %v\n", unsafe.Sizeof(*w), unsafe.Alignof(w))
+	//其实alignof只和类型有关，和在不在struct无关
+	fmt.Printf("alignof(Sw.b) %v,alignof(Sw.i) %v,alignof(Sw.j) %v\n", unsafe.Alignof(w.b), unsafe.Alignof(w.i), unsafe.Alignof(w.j))
+
+	//改变成员变量位置，结构体大小发生变化
+	type Sw2 struct {
+		b byte
+		j int64
+		i int32
+	}
+	w2 := new(Sw2)
+	//结构体
+	fmt.Printf("sizeof(w2) %v, alignof(Sw2) %v\n", unsafe.Sizeof(*w2), unsafe.Alignof(w2))
+	//空结构体作为成员变量
+	type SC struct {
+		a struct{}
+		b int64
+		c int64
+	}
+
+	type SD struct {
+		a int64
+		b struct{}
+		c int64
+	}
+
+	type SE struct {
+		a int64
+		b int64
+		c struct{}
+	}
+	sc := SC{}
+	sd := SD{}
+	se := SE{}
+
+	fmt.Println(unsafe.Sizeof(sc)) // 16
+	fmt.Println(unsafe.Sizeof(sd)) // 16
+	fmt.Println(unsafe.Sizeof(se)) // 24
+	fmt.Printf("%p, %p\n", &sc.a, &sc.b)
+
+	// //make slice容量0和new的区别
+	// sl1 := make([]int, 0)
+	// fmt.Printf("sl1 %#v\n", sl1)
+	// slh1 := (*reflect.SliceHeader)(unsafe.Pointer(&sl1))
+	// fmt.Printf("slice header %#v, *s1h1.Data: %v\n", slh1, *(&slh1.Data))
+
+	// sl2 := new([]int)
+	// fmt.Printf("sl2 %#v\n", *sl2)
+	// slh2 := (*reflect.SliceHeader)(unsafe.Pointer(sl2))
+	// fmt.Printf("slice header %#v\n", slh2)
+	// *sl2 = append(*sl2, 10)
+	// fmt.Printf("sl2 %#v\n", *sl2)
+	// fmt.Printf("slice header %#v\n", slh2)
 
 }
