@@ -194,5 +194,7 @@ func main() {
 	// *sl2 = append(*sl2, 10)
 	// fmt.Printf("sl2 %#v\n", *sl2)
 	// fmt.Printf("slice header %#v\n", slh2)
+	m1 := make(map[int]int)
+	fmt.Println(m1)
 
 }
