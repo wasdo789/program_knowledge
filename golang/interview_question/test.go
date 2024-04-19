@@ -181,20 +181,36 @@ func main() {
 	fmt.Println(unsafe.Sizeof(se)) // 24
 	fmt.Printf("%p, %p\n", &sc.a, &sc.b)
 
-	// //make slice容量0和new的区别
-	// sl1 := make([]int, 0)
-	// fmt.Printf("sl1 %#v\n", sl1)
-	// slh1 := (*reflect.SliceHeader)(unsafe.Pointer(&sl1))
-	// fmt.Printf("slice header %#v, *s1h1.Data: %v\n", slh1, *(&slh1.Data))
+	//make slice容量0和new的区别
+	sl1 := make([]int, 0)
+	fmt.Printf("sl1 %#v\n", sl1)
+	slh1 := (*reflect.SliceHeader)(unsafe.Pointer(&sl1))
+	fmt.Printf("slice header %#v, *s1h1.Data: %v\n", slh1, *(&slh1.Data))
 
-	// sl2 := new([]int)
-	// fmt.Printf("sl2 %#v\n", *sl2)
-	// slh2 := (*reflect.SliceHeader)(unsafe.Pointer(sl2))
-	// fmt.Printf("slice header %#v\n", slh2)
-	// *sl2 = append(*sl2, 10)
-	// fmt.Printf("sl2 %#v\n", *sl2)
-	// fmt.Printf("slice header %#v\n", slh2)
+	sl2 := new([]int)
+	fmt.Printf("sl2 %#v\n", *sl2)
+	slh2 := (*reflect.SliceHeader)(unsafe.Pointer(sl2))
+	fmt.Printf("slice header %#v\n", slh2)
+	*sl2 = append(*sl2, 10)
+	fmt.Printf("sl2 %#v\n", *sl2)
+	fmt.Printf("slice header %#v\n", slh2)
 	m1 := make(map[int]int)
 	fmt.Println(m1)
 
+	//测试go slice的扩容
+	a := []int{1, 2, 3}
+	fmt.Printf("len:%d, cap:%d\n", len(a), cap(a))
+	testselect()
+
+}
+
+func testselect() {
+	print("testselect")
+	c := make(chan struct{})
+	close(c)
+	select {
+	case c <- struct{}{}: // 若此分支被选中，则产生一个恐慌
+	case a := <-c:
+		fmt.Printf("recv %v\n", a)
+	}
 }

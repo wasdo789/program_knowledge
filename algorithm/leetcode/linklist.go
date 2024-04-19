@@ -379,3 +379,62 @@ func CheckListMergeNode(l *Node, r *Node) *Node {
 
 	return lCur
 }
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func (l *ListNode) Print() {
+	for l != nil {
+		fmt.Printf("%d, ", l.Val)
+		l = l.Next
+	}
+	fmt.Println()
+}
+
+func NewList(vals []int) *ListNode {
+	h := &ListNode{}
+	cur := h
+	for _, val := range vals {
+		n := &ListNode{
+			Val: val,
+		}
+		cur.Next = n
+		cur = n
+	}
+	return h.Next
+}
+
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+	h := head
+	var prel *ListNode
+	l := head
+	// 找left
+	for i := 1; i < left && l != nil; i++ {
+		tmp := l.Next
+		prel = l
+		l = tmp
+	}
+	if l == nil || l.Next == nil {
+		return h
+	}
+
+	cur := l
+	next := l.Next
+
+	for i := left; i < right && next != nil; i++ {
+		nn := next.Next
+		next.Next = cur
+		cur = next
+		next = nn
+	}
+	if prel != nil {
+		prel.Next = cur
+	} else {
+		h = cur
+	}
+	l.Next = next
+
+	return h
+}

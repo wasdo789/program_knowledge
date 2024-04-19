@@ -236,4 +236,10 @@ func TestAbc(t *testing.T) {
 	p4 := &n
 	fmt.Printf("%p, %p, %p, %v\n", &p3, p3, p4, &n)
 
+	h := NewList([]int{3, 2, 1})
+	h.Print()
+
+	r := reverseBetween(h, 1, 2)
+	r.Print()
+
 }

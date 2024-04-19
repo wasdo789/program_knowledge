@@ -63,3 +63,11 @@ func TestBFS(t *testing.T) {
 	graphBFS(v1)
 	graphDFS(v1)
 }
+
+func TestAbc(t *testing.T) {
+	//t.Log(rightBigger([]int{1, 3, 2, 7, 6, 4, 5}))
+	//t.Log(manacher("a"))
+	//t.Log(manacher("abacdca"))
+	s := make([]int, 2, 5)
+	t.Log(s[2])
+}
