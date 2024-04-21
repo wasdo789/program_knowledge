@@ -13,4 +13,6 @@ func TestRotateMetrix(t *testing.T) {
 	RotateMetrix(d)
 	PrintMetrix(d)
 
+	//rightSideView()
+
 }
