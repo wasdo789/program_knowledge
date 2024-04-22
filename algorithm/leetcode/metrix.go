@@ -34,3 +34,62 @@ func PrintMetrix(data [][]int) {
 	}
 	fmt.Println()
 }
+
+func rotate2(matrix [][]int) {
+	n := len(matrix[0])
+	for i := 0; i < n/2; i++ {
+		for j := 0; j < (n+1)/2; j++ {
+			tmp := matrix[i][j]
+			matrix[i][j] = matrix[n-1-j][i]
+			matrix[n-1-j][i] = matrix[n-1-i][n-1-j]
+			matrix[n-1-i][n-1-j] = matrix[j][n-1-i]
+			matrix[j][n-1-i] = tmp
+		}
+	}
+}
+
+func setZeroes(matrix [][]int) {
+	col0Flag := false
+	row0Flag := false
+	c := len(matrix[0])
+	r := len(matrix)
+	for j := 0; j < c; j++ {
+		if matrix[0][j] == 0 {
+			row0Flag = true
+			break
+		}
+	}
+	for j := 0; j < r; j++ {
+		if matrix[j][0] == 0 {
+			col0Flag = true
+			break
+		}
+	}
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			if matrix[i][j] == 0 {
+				matrix[0][j] = 0
+				matrix[i][0] = 0
+			}
+		}
+	}
+
+	for i := 1; i < r; i++ {
+		for j := 1; j < c; j++ {
+			if matrix[0][j] == 0 || matrix[i][0] == 0 {
+				matrix[i][j] = 0
+			}
+		}
+	}
+
+	for j := 0; j < c; j++ {
+		if row0Flag {
+			matrix[0][j] = 0
+		}
+	}
+	for j := 0; j < r; j++ {
+		if col0Flag {
+			matrix[j][0] = 0
+		}
+	}
+}
