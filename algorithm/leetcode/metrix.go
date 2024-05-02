@@ -93,3 +93,38 @@ func setZeroes(matrix [][]int) {
 		}
 	}
 }
+
+func gameOfLife(board [][]int) {
+	r := len(board)
+	c := len(board[0])
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			cnt := 0
+			for row := i - 1; row <= i+1; row++ {
+				for col := j - 1; col <= j+1; col++ {
+					if row >= 0 && row < r && col >= 0 && col < c && (row != i || col != j) && board[row][col]%2 == 1 {
+						cnt++
+					}
+				}
+			}
+			if board[i][j]%2 == 1 {
+				//活细胞
+				if cnt == 2 || cnt == 3 {
+					board[i][j] = board[i][j] | 2
+				}
+			} else {
+				//死细胞
+				if cnt == 3 {
+					board[i][j] = board[i][j] | 2
+				}
+			}
+		}
+	}
+
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			board[i][j] = board[i][j] / 2
+		}
+	}
+
+}

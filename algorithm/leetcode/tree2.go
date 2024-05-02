@@ -78,3 +78,47 @@ func isSymmetric(root *TreeNode) bool {
 	}
 	return isSymmetricSub(root.Left, root.Right)
 }
+
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+	if root.Left == nil && root.Right == nil {
+		return root.Val == targetSum
+	}
+	if root.Left != nil && hasPathSum(root.Left, targetSum-root.Val) {
+		return true
+	}
+	if root.Right != nil && hasPathSum(root.Right, targetSum-root.Val) {
+		return true
+	}
+	return false
+}
+
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	return buildTreeRe(&preorder, inorder)
+}
+
+func buildTreeRe(preorder *([]int), inorder []int) *TreeNode {
+	if len(*preorder) == 0 || len(inorder) == 0 {
+		return nil
+	}
+	var head *TreeNode
+	for i := 0; i < len(inorder); i++ {
+		if (inorder)[i] == (*preorder)[0] {
+			head = &TreeNode{
+				Val: (*preorder)[0],
+			}
+			*preorder = (*preorder)[1:]
+			if i-1 >= 0 && len(*preorder) > 0 {
+				head.Left = buildTreeRe(preorder, inorder[0:i])
+			}
+
+			if len(*preorder) > 0 && i+1 < len(inorder) {
+				head.Right = buildTreeRe(preorder, inorder[i+1:])
+			}
+			break
+		}
+	}
+	return head
+}

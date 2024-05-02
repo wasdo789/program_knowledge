@@ -438,3 +438,72 @@ func reverseBetween(head *ListNode, left int, right int) *ListNode {
 
 	return h
 }
+func reverseSubGroups(head *ListNode, k int) (*ListNode, *ListNode) {
+	tail := head
+	cur := head
+	next := head.Next
+	tail.Next = nil
+	for i := 0; i < k-1; i++ {
+		tmp := next.Next
+		next.Next = cur
+		cur = next
+		next = tmp
+	}
+	return cur, tail
+}
+
+func reverseKGroup(head *ListNode, k int) *ListNode {
+	if head == nil || head.Next == nil || k <= 1 {
+		return head
+	}
+	var newHead, newTail *ListNode //新链表的头尾
+	begin := head
+	cur := head
+	cnt := 0
+	for cur != nil {
+		tmp := cur.Next
+		cnt++
+		if cnt%k == 0 {
+			subhead, subtail := reverseSubGroups(begin, k)
+			if newTail == nil {
+				newTail = subtail
+				newHead = subhead
+			} else {
+				newTail.Next = subhead
+				newTail = subtail
+			}
+			subtail.Next = tmp
+			begin = tmp
+		}
+		cur = tmp
+	}
+
+	return newHead
+}
+
+func deleteDuplicates(head *ListNode) *ListNode {
+	dummy := &ListNode{}
+
+	dummy.Next = head
+	pre := dummy
+	cur := dummy.Next
+	cnt := 0
+	for cur != nil {
+		if cur.Val != pre.Next.Val {
+			if cnt > 1 {
+				pre.Next = cur
+			} else {
+				pre = pre.Next
+			}
+			cnt = 0
+		} else {
+			cnt++
+			cur = cur.Next
+		}
+	}
+	if cnt > 1 {
+		pre.Next = cur
+	}
+
+	return dummy.Next
+}

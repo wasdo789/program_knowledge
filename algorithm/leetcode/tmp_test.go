@@ -50,7 +50,11 @@ func TestMaxArea(t *testing.T) {
 	//t.Log(minWindow("ADOBECODEBANC", "ABC"))
 	// t.Log(minWindow("babb", "baba"))
 	// t.Log(summaryRanges([]int{0, 1, 2, 4, 5, 7}))
-	t.Log(maxSubArray([]int{8, -19, 5, -4, 20}))
-	t.Log(maxSubArray([]int{-2, 1, -3, 4, -1, 2, 1, -5, 4}))
-	t.Log(spiralOrder([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}))
+	// t.Log(maxSubArray([]int{8, -19, 5, -4, 20}))
+	// t.Log(maxSubArray([]int{-2, 1, -3, 4, -1, 2, 1, -5, 4}))
+	// t.Log(spiralOrder([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}))
+	// s := []int{1}
+	// t.Log(s[2:])
+	r := buildTree([]int{3, 1, 2, 4}, []int{1, 2, 3, 4})
+	t.Log(r)
 }

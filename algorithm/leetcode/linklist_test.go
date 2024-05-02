@@ -224,22 +224,26 @@ func TestCheckListMergeNode(t *testing.T) {
 }
 
 func TestAbc(t *testing.T) {
-	x := 10
-	p1 := &x
-	p2 := &x
-	fmt.Printf("%p, %p, %v, %v\n", p1, p2, &x, p1 == p2)
+	// x := 10
+	// p1 := &x
+	// p2 := &x
+	// fmt.Printf("%p, %p, %v, %v\n", p1, p2, &x, p1 == p2)
 
-	n := &Node{
-		Val: 1,
-	}
-	p3 := &n
-	p4 := &n
-	fmt.Printf("%p, %p, %p, %v\n", &p3, p3, p4, &n)
+	// n := &Node{
+	// 	Val: 1,
+	// }
+	// p3 := &n
+	// p4 := &n
+	// fmt.Printf("%p, %p, %p, %v\n", &p3, p3, p4, &n)
 
-	h := NewList([]int{3, 2, 1})
-	h.Print()
+	// h := NewList([]int{3, 2, 1})
+	// h.Print()
 
-	r := reverseBetween(h, 1, 2)
-	r.Print()
+	// r := reverseBetween(h, 1, 2)
+	// r.Print()
+
+	h := NewList([]int{1, 2, 3, 4, 5, 6})
+	h2 := reverseKGroup(h, 2)
+	h2.Print()
 
 }
