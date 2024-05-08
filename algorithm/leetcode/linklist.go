@@ -507,3 +507,66 @@ func deleteDuplicates(head *ListNode) *ListNode {
 
 	return dummy.Next
 }
+
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+
+func rotateRight(head *ListNode, k int) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	len := 1
+	tail := head
+	for tail.Next != nil {
+		tail = tail.Next
+		len++
+	}
+	rightpos := k % len
+	if rightpos == 0 {
+		return head
+	}
+	tail.Next = head
+	pre := head
+	for n := 1; n < len-rightpos; n++ {
+		pre = pre.Next
+	}
+	next := pre.Next
+	pre.Next = nil
+	return next
+
+}
+
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func partition(head *ListNode, x int) *ListNode {
+	lh := &ListNode{}
+	lt := lh
+
+	gh := &ListNode{}
+	gt := gh
+	for head != nil {
+		if head.Val < x {
+			lt.Next = head
+			lt = head
+		} else {
+			gt.Next = head
+			gt = head
+		}
+		tmp := head.Next
+		head.Next = nil
+		head = tmp
+	}
+
+	lt.Next = gh.Next
+	return lh.Next
+}
