@@ -76,3 +76,81 @@ func graphDFS(v *Vertex) {
 
 // 拓扑排序
 //func
+
+type GroupInfo struct {
+	Parent string
+	Times  float64 //倍数
+}
+
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+	equMap := make(map[string]GroupInfo)
+
+	//var getParent func(string)string
+	getParent := func(a string) string {
+		tmp := a
+		times := 1.0
+		for equMap[a].Parent != a {
+			times *= equMap[a].Times
+			a = equMap[a].Parent
+		}
+		equMap[tmp] = GroupInfo{Parent: a, Times: times}
+		return a
+	}
+
+	for idx, pair := range equations {
+		x, y := pair[0], pair[1]
+		_, okX := equMap[x]
+		_, okY := equMap[y]
+		if !okX && !okY { //都不存在
+
+			equMap[x] = GroupInfo{
+				Parent: y,
+				Times:  values[idx],
+			}
+			equMap[y] = GroupInfo{
+				Parent: y,
+				Times:  1.0,
+			}
+		} else if okX && !okY { //x存在，y不存在,x/y = m,y = x/m
+			equMap[y] = GroupInfo{
+				Parent: x,
+				Times:  1.0 / values[idx],
+			}
+		} else if okY && !okX { //x不存在，y存在 x/y = m,x = m*y
+			equMap[x] = GroupInfo{
+				Parent: y,
+				Times:  values[idx],
+			}
+		} else { //都存在,x/y = m, xtimes*ngroupy/(ytimes*groupy) = m,
+			xParent := getParent(x) // x = timesx*xparent, y=timesy*yparent,
+			yParent := getParent(y)
+			if xParent != yParent {
+				equMap[xParent] = GroupInfo{Parent: yParent, Times: values[idx] * equMap[y].Times / equMap[x].Times}
+			}
+		}
+	}
+
+	var res []float64
+	for _, vals := range queries {
+		x, y := vals[0], vals[1]
+		_, ok := equMap[x]
+		if !ok {
+			res = append(res, -1.0)
+			continue
+		}
+		_, ok = equMap[y]
+		if !ok {
+			res = append(res, -1.0)
+			continue
+		}
+		xparent := getParent(x)
+		yparent := getParent(y)
+		if xparent != yparent {
+			res = append(res, -1.0)
+		} else {
+			res = append(res, equMap[x].Times/equMap[y].Times)
+
+		}
+	}
+	return res
+}

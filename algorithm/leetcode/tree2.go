@@ -122,3 +122,134 @@ func buildTreeRe(preorder *([]int), inorder []int) *TreeNode {
 	}
 	return head
 }
+
+func buildTreeRe2(inorder []int, is int, ie int, postorder []int, ps int, pe int) *TreeNode {
+
+	if is == ie {
+		return &TreeNode{
+			Val: inorder[is],
+		}
+	}
+
+	parent := &TreeNode{
+		Val: postorder[pe],
+	}
+	idx := is
+	for ; idx <= ie; idx++ {
+		if inorder[idx] == parent.Val {
+			break
+		}
+	}
+	rightChildsNum := ie - idx
+	if idx+1 < len(inorder) && idx+1 <= ie {
+		parent.Right = buildTreeRe2(inorder, idx+1, ie, postorder, pe-rightChildsNum, pe-1)
+	}
+	if idx-1 >= 0 && is <= idx-1 {
+		parent.Left = buildTreeRe2(inorder, is, idx-1, postorder, ps, pe-rightChildsNum-1)
+	}
+	return parent
+}
+
+func buildTree2(inorder []int, postorder []int) *TreeNode {
+	return buildTreeRe2(inorder, 0, len(inorder)-1, postorder, 0, len(postorder)-1)
+}
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+//返回头，尾部指针
+func flattenre(root *TreeNode) (*TreeNode, *TreeNode) {
+	//边界条件TODO
+	if root == nil {
+		return nil, nil
+	}
+
+	head := root
+	tail := root
+	rightChild := root.Right
+	if root.Left != nil {
+		h, t := flattenre(root.Left)
+		if h != nil {
+			root.Right = h
+			tail = t
+		}
+	}
+	root.Left = nil
+	if rightChild != nil {
+		h, t := flattenre(rightChild)
+		if h != nil {
+			tail.Right = h
+			tail = t
+		}
+	}
+	return head, tail
+}
+func flatten(root *TreeNode) {
+	flattenre(root)
+}
+
+func dfssumNumbers(presum int, root *TreeNode, sum *int) {
+	presum = presum*10 + root.Val
+	if root.Left == nil && root.Right == nil {
+		*sum += presum
+	}
+	if root.Left != nil {
+		dfssumNumbers(presum, root.Left, sum)
+	}
+	if root.Right != nil {
+		dfssumNumbers(presum, root.Right, sum)
+	}
+}
+
+func sumNumbers(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	sum := 0
+	dfssumNumbers(0, root, &sum)
+	return sum
+}
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func Max(a, b int) int {
+	if a >= b {
+		return a
+	}
+	return b
+}
+
+// 以root 为端点的最大路径和
+func maxchildpath(root *TreeNode, sum *int) int {
+	if root == nil {
+		return 0
+	}
+	leftgain := Max(maxchildpath(root.Left, sum), 0)
+	rightgain := Max(maxchildpath(root.Right, sum), 0)
+	newsum := root.Val + leftgain + rightgain
+	if newsum > *sum {
+		*sum = newsum
+	}
+	return Max(root.Val, root.Val+Max(leftgain, rightgain))
+
+}
+func maxPathSum(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	sum := root.Val
+	maxchildpath(root, &sum)
+	return sum
+
+}

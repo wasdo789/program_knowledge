@@ -35,3 +35,32 @@ func (h *TreeNodeHeap) Pop() any {
 	*h = old[0 : n-1]
 	return v
 }
+
+type PairHeap struct {
+	nums1 []int
+	nums2 []int
+	pairs [][]int
+}
+
+func (ph PairHeap) Len() int { return len(ph.pairs) }
+func (ph PairHeap) Less(i, j int) bool {
+	return ph.nums1[ph.pairs[i][0]]+ph.nums2[ph.pairs[i][1]] >
+		ph.nums1[ph.pairs[j][0]]+ph.nums2[ph.pairs[j][1]]
+}
+func (ph PairHeap) Swap(i, j int) {
+	ph.pairs[i] = ph.pairs[j]
+}
+func (ph *PairHeap) Push(x any) {
+	ph.pairs = append(ph.pairs, x.([]int))
+}
+func (ph *PairHeap) Pop() any {
+	top := ph.pairs[0]
+	ph.pairs = ph.pairs[1:]
+	return top
+}
+func kSmallestPairs(nums1 []int, nums2 []int, k int) [][]int {
+	ph := &PairHeap{}
+
+	return ph.pairs
+
+}

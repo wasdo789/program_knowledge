@@ -67,6 +67,25 @@ def merge_sort(collection:list[int])->list[int]:
     return merge(merge_sort(collection[:mid]), merge_sort(collection[mid:]))
     
 
+
+from heapq import *
+class Solution(object):
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        if len(nums) < k:
+            k = len(nums)
+        h = nums[:k]
+        heapify(h)
+        for n in nums[k:]:
+            if n > h[0]:
+                heappushpop(h, n)
+        return h[0]
+
+
 if __name__ == "__main__":
     cases = [
         ([],[]),

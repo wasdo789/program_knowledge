@@ -316,3 +316,57 @@ func Huffman(datas []int) *TreeNode {
 	}
 	return nil
 }
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func levelOrder(root *TreeNode) [][]int {
+	return nil
+}
+
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func zigzagLevelOrder(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+	var res [][]int
+	q := []*TreeNode{root}
+	direction := 1
+	for i := 0; len(q) > 0; i++ {
+		var tmp []*TreeNode
+		for j := 0; j < len(q); j++ {
+			curNode := q[j]
+			if curNode.Left != nil {
+				tmp = append(tmp, curNode.Left)
+			}
+			if curNode.Right != nil {
+				tmp = append(tmp, curNode.Right)
+			}
+		}
+		res = append(res, []int{})
+		beginIdx := 0
+		if direction == -1 {
+			beginIdx = len(q) - 1
+		}
+		for j := 0; j < len(q); j++ {
+			curNode := q[beginIdx]
+			res[i] = append(res[i], curNode.Val)
+			beginIdx += direction
+		}
+		direction *= -1
+		q = tmp
+	}
+	return res
+}

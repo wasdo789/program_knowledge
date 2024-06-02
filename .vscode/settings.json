@@ -2,9 +2,6 @@
     "accessibility.signals.chatRequestSent": {
         "sound": "off"
     },
-    "accessibility.signals.chatResponsePending": {
-        "sound": "off"
-    },
     "accessibility.signals.clear": {
         "sound": "off"
     },
@@ -15,6 +12,9 @@
         "sound": "off"
     },
     "accessibility.signals.lineHasError": {
+        "sound": "off"
+    },
+    "accessibility.signals.progress": {
         "sound": "off"
     }
 }

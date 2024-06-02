@@ -71,3 +71,25 @@ func TestAbc(t *testing.T) {
 	s := make([]int, 2, 5)
 	t.Log(s[2])
 }
+
+func TestConstructor(t *testing.T) {
+	res := calcEquation([][]string{
+		{"a", "b"},
+		{"b", "c"},
+		{"d", "e"},
+		{"a", "d"},
+	},
+		[]float64{1.0, 2.0, 3.0, 4.0}, [][]string{{"c", "e"}})
+	// res := calcEquation([][]string{
+	// 	{"x1", "x2"},
+	// 	{"x3", "x4"},
+	// 	{"x2", "x4"},
+	// 	{"x10", "x20"},
+	// 	{"x30", "x40"},
+	// 	{"x20", "x40"},
+	// 	{"x4", "x40"},
+	// },
+	// 	[]float64{2.0, 3.0, 5.0, 7.0, 11.0, 13.0, 19.0}, [][]string{{"x1", "x10"}})
+	t.Log(res)
+	t.Log(123)
+}
