@@ -85,7 +85,24 @@ new slice时，返回的指针等于nil
 
 ### GMP 模型
 
+### sync
+#### sync.map
+#### sync.Cond
+#### Pool,Once
 
+### 性能测试、优化
+#### benchmark test 基准测试
+#### unit test 单元测试
+#### fuzz test
+
+### 零值可用
+
+### 字符串拼接
+- +
+- fmt.Sprintf()
+- strings.Builder
+- bytes.Buffer
+- []byte
 
 
 
